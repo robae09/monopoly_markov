@@ -1,0 +1,841 @@
+
+<!-- saved from url=(0058)http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="description" content="Probabilities in the game Monopoly
+including land on frequencies, expected earnings, and payback times.">
+<meta name="keywords" content="Monopoly, probability, probabilities,
+statistics, jail, game, games, go, parker, brothers, railroad,
+Mediterranean, Baltic, Income Tax, Reading, Oriental, Vermont,
+Connecticut, St. Charles Place, Electric Company, States, Virginia,
+Pennsylvania, St. James Place, Tennessee, New York, Free Parking,
+Kentucky, Indiana, Illinois, Atlantic, Ventnor, Water Works,
+Marvin Gardens, Go To Jail, Pacific, North Carolina,
+Pennsylvania, Short Line, Chance, Park Place,
+Luxury Tax, Boardwalk, Truman Collins, Truman, Collins">
+
+</head><body><center>
+<title>
+Probabilities in the Game of Monopoly®
+</title>
+</center>
+
+
+
+<center>
+<h2>
+Probabilities in the Game of Monopoly®
+</h2>
+</center>
+
+<center><img src="./Probabilities in the Game of Monopoly®_files/monop.gif" width="463" height="125"></center>
+<p>
+
+<a name="TOC"></a></p><h2><a name="TOC"> Table of Contents </a></h2><a name="TOC">
+</a><ul><a name="TOC">
+</a><li><a name="TOC"> </a><a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Long_term">Long term probabilities for each square</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Income_per_roll_prop">Expected income per roll for each property</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Income_per_roll_other">Expected income per roll for other squares</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Payback">Payback times for purchases</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Mortgage">Mortgage payback and loss times</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Conclusions">Conclusions from all of this</a>
+</li><li> <a href="http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml#Markov">The Markov matrix</a>
+</li></ul>
+
+I recently saw an article in
+<a href="http://www.scientificamerican.com/"> Scientific American</a> (the
+April 1996 issue with additional information in the August
+1996 and April 1997 issues) that discussed the probabilities
+of landing on the various squares in the game of
+Monopoly®.  They used a simplified model of the game
+without considering the effects of the Chance and Community
+Chest cards or of the various ways of being sent to jail.
+<p></p>
+
+<p>
+I was intrigued enough with this problem that I started
+working on trying to find the probabilities for landing on
+the different squares with all of the rules taken into
+account.  I ran into some interesting problems but finally
+came up with the right answers, which you will find here
+along with some other useful derived data.  Incidentally,
+I'm not much of a Monopoly® player myself, but I've
+always enjoyed interesting problems involving probability
+and statistics, of which this was one.
+</p>
+
+<p>
+I first wrote a <a href="http://www.tkcs-collins.com/truman/monopoly/mon_sim.c">C program</a> that
+simulates a single person rolling the dice and moving around
+the board a great number of times.  It included all of the
+rules for going to jail and the Chance and Community Chest
+cards.  Although this gave good aproximate answers, I
+decided that I wanted to write another
+<a href="http://www.tkcs-collins.com/truman/monopoly/mon_mark.c">program</a> that would find the exact
+probabilities using a Markov matrix, which was the method
+described in a simplified form in the Scientific American
+article.  I used an extended version of this program to
+generate this web page.
+</p>
+
+<p>
+I discovered that it is really necessary to model two
+different strategies.  When you are in jail, it is possible to
+get out immediately by paying $50 or by using a Get out of
+Jail Free card, but you can also wait until you roll doubles
+or pay on your third turn in jail.  Early in the
+game it is often best to get out as soon as possible so as
+to have more opportunities to buy property.  Later in the
+game, it is best to stay in jail as long as possible to
+avoid landing on an opponent's property.  The choice of
+strategy changes the probabilities for all of the squares of
+the board because the more time you spend in jail, the less
+you will land on other squares.  I computed probabilities
+for both cases and have included them here.
+I have compared the results from my simulation program and
+the Markov one and the results are very close, which leads
+me to believe that these results are reliable.
+</p>
+
+<p>
+In the process of figuring all of this out I ran into an
+interesting difficulty.  When trying to calculate the
+probabilities exactly using the Markov matrix, it is
+necessary to estimate the probability--for each square--that
+the last two rolls of the dice are doubles (since three
+doubles in a row sends you to jail).  First I used an
+estimate of 1/36, but in practice it's different for each
+square and it's not that high for any square.  I used my
+simulation program to find the empirical probability for
+each square and then used these values in my Markov matrix
+program.  I simulated 32 billion rolls to make these
+estimates, so I believe they are reliable and any deviation
+from their exact values is extremely small.  Interestingly,
+the probabilities of two previous rolls being doubles is
+slightly different on certain squares for the two jail
+strategies.  Additionally, the average roll when landing on
+a utility is a bit lower or higher than 7 depending on the
+utility and the jail strategy, which affects the rent value.
+</p>
+
+<p>
+Just as I finished putting together this web page, I
+realized that there is a more efficient way of making the
+probability calculations.  It would have been better if I
+had created a larger Markov matrix with three entries for
+each square.  The first would be for being on that square
+not having rolled doubles in the last roll.  The second
+would be for having rolled doubles on the last roll but not
+the one before, and the third for having rolled doubles the
+last two times.  This much larger matrix would insure that
+the exact probabilities would be generated and there would
+be no need for doing simulation at all.  If I ever get the
+time and inclination I may redo this in that way.  I don't
+expect it would change any of the probabilities by more than
+one or two in the third decimal place, but it would still be
+a better way of doing it.
+</p>
+
+<a name="Long_term"></a>
+<p>
+Below are the two tables of probabilities, expressed as
+percentages, for landing on any of the squares of the game.
+I have separated the probabilities for visiting jail and
+being in jail.  The number given for a particular square is
+the percent chance that a player will land on it after a
+single roll, in the long run.  For example, on average,
+about 3.18% of the rolls will result in the player landing
+on the most probable non-jail square, Illinois Avenue.  Of
+course, for a single roll starting on a particular square,
+the chances will be quite different, but in the long run it
+will average out.  At the bottom of this page I have
+included a matrix containing the probabilities for landing
+on any square after one roll starting from each square on
+the board.  It's very big and cumbersome but it's there if
+you want it.
+</p>
+
+<p>
+The first column indicates the average probability for
+landing on each square when the player's strategy is to get
+out of jail immediately when he gets in.
+The third column is for a player who stays in jail as long
+as he can once there.  The second and fourth columns hold the
+rank of the squares from most often to least often visited.
+Note the higher rank of the squares 2, 4, 6, 8, 10, and 12
+in front of Jail caused by the increased likelihood of getting
+out of jail with doubles.  In this table, and each of
+those following, I have split the jail square into two,
+"visiting jail" and "in jail", the latter of which is
+listed at the bottom of the tables.
+</p>
+
+<p>
+Note that these numbers indicate the percent chance that you
+will "end up" on each square after a roll--not just land
+on.  This takes into account being sent to another square
+because of a Chance card or for some other reason.  For
+example, there is no possibility that you will end up on the
+Go To Jail square, because if you land on it, you
+immediately go to the Jail square and that one is counted.
+This is the reason the Chance and Community Chest
+probabilities are low.
+</p>
+
+<h3>
+Long Term Probabilities for Ending Up on Each of the Squares in Monopoly®
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Probability % (Jail Short)</th><th>Rank</th><th>Probability % (Jail Long)</th><th>Rank</th></tr>
+<tr align="center"><td align="left"><font color="#834B00">Go</font></td><td>3.0961</td><td>3</td><td>2.9143</td><td>3</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>2.1314</td><td>36</td><td>2.0073</td><td>36</td></tr>
+<tr align="center"><td align="left"><font color="#FFDB0F">Community Chest</font></td><td>1.8849</td><td>37</td><td>1.7750</td><td>37</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>2.1624</td><td>35</td><td>2.0369</td><td>35</td></tr>
+<tr align="center"><td align="left"><font color="#000000">Income Tax</font></td><td>2.3285</td><td>28</td><td>2.1934</td><td>27</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>2.9631</td><td>6</td><td>2.8010</td><td>8</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>2.2621</td><td>32</td><td>2.1317</td><td>32</td></tr>
+<tr align="center"><td align="left"><font color="#FA6C00">Chance</font></td><td>0.8650</td><td>40</td><td>0.8152</td><td>40</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>2.3210</td><td>29</td><td>2.1874</td><td>28</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>2.3003</td><td>30</td><td>2.1680</td><td>30</td></tr>
+<tr align="center"><td align="left"><font color="#834B00">Visiting Jail</font></td><td>2.2695</td><td>31</td><td>2.1392</td><td>31</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>2.7017</td><td>15</td><td>2.5560</td><td>15</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>2.6040</td><td>20</td><td>2.6140</td><td>13</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>2.3721</td><td>26</td><td>2.1741</td><td>29</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>2.4649</td><td>24</td><td>2.4255</td><td>22</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>2.9200</td><td>8</td><td>2.6354</td><td>11</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>2.7924</td><td>12</td><td>2.6802</td><td>9</td></tr>
+<tr align="center"><td align="left"><font color="#FFDBOF">Community Chest</font></td><td>2.5945</td><td>21</td><td>2.2957</td><td>24</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>2.9356</td><td>7</td><td>2.8210</td><td>6</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>3.0852</td><td>4</td><td>2.8118</td><td>7</td></tr>
+<tr align="center"><td align="left"><font color="#834B00">Free Parking</font></td><td>2.8836</td><td>9</td><td>2.8253</td><td>5</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>2.8358</td><td>10</td><td>2.6143</td><td>12</td></tr>
+<tr align="center"><td align="left"><font color="#FA6C00">Chance</font></td><td>1.0480</td><td>38</td><td>1.0448</td><td>38</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>2.7357</td><td>13</td><td>2.5671</td><td>14</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>3.1858</td><td>2</td><td>2.9929</td><td>2</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>3.0659</td><td>5</td><td>2.8930</td><td>4</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>2.7072</td><td>14</td><td>2.5370</td><td>16</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>2.6789</td><td>16</td><td>2.5191</td><td>18</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>2.8074</td><td>11</td><td>2.6507</td><td>10</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>2.5861</td><td>22</td><td>2.4381</td><td>21</td></tr>
+<tr align="center"><td align="left"><font color="#834B00">Go To Jail</font></td><td>0.0000</td><td>41</td><td>0.0000</td><td>41</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>2.6774</td><td>17</td><td>2.5236</td><td>17</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>2.6252</td><td>19</td><td>2.4721</td><td>20</td></tr>
+<tr align="center"><td align="left"><font color="#FFDB0F">Community Chest</font></td><td>2.3661</td><td>27</td><td>2.2276</td><td>26</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>2.5006</td><td>23</td><td>2.3531</td><td>23</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>2.4326</td><td>25</td><td>2.2906</td><td>25</td></tr>
+<tr align="center"><td align="left"><font color="#FA6C00">Chance</font></td><td>0.8669</td><td>39</td><td>0.8158</td><td>39</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>2.1864</td><td>33</td><td>2.0595</td><td>33</td></tr>
+<tr align="center"><td align="left"><font color="#000000">Luxury Tax</font></td><td>2.1799</td><td>34</td><td>2.0521</td><td>34</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>2.6260</td><td>18</td><td>2.4832</td><td>19</td></tr>
+<tr align="center"><td align="left"><font color="#DD7800">In Jail</font></td><td>3.9499</td><td>1</td><td>9.4569</td><td>1</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<a name="Income_per_roll_prop"></a>
+<p>
+I've used the above information to draw other conclusions
+about the game such as how much money you can expect to earn
+on average from each property, and more importantly, how
+many opponent's rolls it takes on average to earn back the
+money invested to buy property, houses, or hotels.
+</p>
+
+<p>
+First, I have created two sets of tables containing the
+average income per opponent roll for each property,
+including railroads, and utilities.  One set assumes
+preferred short jail stay and the other preferred long jail
+stay.  The values for the railroads include the extra income
+from the two Chance cards that result in double railroad rent.
+</p>
+
+<h3>
+Expected Income Per Opponent Roll on all Properties Assuming Preferred Short Jail Stay
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Single Property</th><th>Own Whole Block</th><th>One House</th><th>Two Houses</th><th>Three Houses</th><th>Four Houses</th><th>Hotel</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>0.0426</td><td>0.0853</td><td>0.2131</td><td>0.6394</td><td>1.9182</td><td>3.4102</td><td>5.3284</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>0.0865</td><td>0.1730</td><td>0.4325</td><td>1.2974</td><td>3.8923</td><td>6.9197</td><td>9.7308</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.1357</td><td>0.2715</td><td>0.6786</td><td>2.0359</td><td>6.1078</td><td>9.0486</td><td>12.4418</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.1393</td><td>0.2785</td><td>0.6963</td><td>2.0889</td><td>6.2666</td><td>9.2839</td><td>12.7653</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.1840</td><td>0.3681</td><td>0.9201</td><td>2.3003</td><td>6.9010</td><td>10.3515</td><td>13.8020</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>0.2702</td><td>0.5403</td><td>1.3508</td><td>4.0525</td><td>12.1575</td><td>16.8854</td><td>20.2624</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>0.2372</td><td>0.4744</td><td>1.1860</td><td>3.5581</td><td>10.6744</td><td>14.8256</td><td>17.7907</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>0.2958</td><td>0.5916</td><td>1.4789</td><td>4.4368</td><td>12.3245</td><td>17.2542</td><td>22.1840</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>0.3909</td><td>0.7819</td><td>1.9547</td><td>5.5848</td><td>15.3583</td><td>20.9431</td><td>26.5279</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>0.4110</td><td>0.8220</td><td>2.0549</td><td>5.8712</td><td>16.1457</td><td>22.0169</td><td>27.8880</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>0.4936</td><td>0.9873</td><td>2.4681</td><td>6.7874</td><td>18.5110</td><td>24.6814</td><td>30.8517</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>0.5105</td><td>1.0209</td><td>2.5523</td><td>7.0896</td><td>19.8509</td><td>24.8137</td><td>29.7764</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>0.4924</td><td>0.9848</td><td>2.4621</td><td>6.8392</td><td>19.1498</td><td>23.9373</td><td>28.7248</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>0.6372</td><td>1.2743</td><td>3.1858</td><td>9.5573</td><td>23.8932</td><td>29.4683</td><td>35.0434</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>0.5956</td><td>1.1912</td><td>2.9779</td><td>8.9338</td><td>21.6576</td><td>26.3952</td><td>31.1328</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>0.5893</td><td>1.1787</td><td>2.9467</td><td>8.8402</td><td>21.4309</td><td>26.1189</td><td>30.8069</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>0.6207</td><td>1.2413</td><td>3.1033</td><td>9.3098</td><td>21.9814</td><td>26.5070</td><td>31.0326</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>0.6961</td><td>1.3922</td><td>3.4806</td><td>10.4417</td><td>24.0963</td><td>29.4511</td><td>34.1365</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>0.6825</td><td>1.3651</td><td>3.4127</td><td>10.2382</td><td>23.6266</td><td>28.8769</td><td>33.4710</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>0.7002</td><td>1.4004</td><td>3.7509</td><td>11.2528</td><td>25.0063</td><td>30.0075</td><td>35.0088</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>0.7652</td><td>1.5305</td><td>3.8262</td><td>10.9320</td><td>24.0504</td><td>28.4232</td><td>32.7960</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>1.3130</td><td>2.6260</td><td>5.2519</td><td>15.7558</td><td>36.7635</td><td>44.6414</td><td>52.5193</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>One Railroad</th><th>Two Railroads</th><th>Three Railroads</th><th>Four Railroads</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>0.8130</td><td>1.6261</td><td>3.2521</td><td>6.5043</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>0.8021</td><td>1.6041</td><td>3.2083</td><td>6.4165</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>0.8538</td><td>1.7076</td><td>3.4152</td><td>6.8304</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>0.6082</td><td>1.2163</td><td>2.4326</td><td>4.8653</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>One Utility</th><th>Two Utilities</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>0.7189</td><td>1.7972</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>0.7939</td><td>1.9849</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<h3>
+Expected Income Per Opponent Roll on all Properties Assuming Preferred Long Jail Stay
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Single Property</th><th>Own Whole Block</th><th>One House</th><th>Two Houses</th><th>Three Houses</th><th>Four Houses</th><th>Hotel</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>0.0401</td><td>0.0803</td><td>0.2007</td><td>0.6022</td><td>1.8066</td><td>3.2117</td><td>5.0183</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>0.0815</td><td>0.1630</td><td>0.4074</td><td>1.2221</td><td>3.6664</td><td>6.5181</td><td>9.1661</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.1279</td><td>0.2558</td><td>0.6395</td><td>1.9185</td><td>5.7556</td><td>8.5268</td><td>11.7243</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.1312</td><td>0.2625</td><td>0.6562</td><td>1.9686</td><td>5.9058</td><td>8.7494</td><td>12.0304</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.1734</td><td>0.3469</td><td>0.8672</td><td>2.1680</td><td>6.5041</td><td>9.7561</td><td>13.0082</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>0.2556</td><td>0.5112</td><td>1.2780</td><td>3.8339</td><td>11.5018</td><td>15.9747</td><td>19.1697</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>0.2174</td><td>0.4348</td><td>1.0870</td><td>3.2611</td><td>9.7833</td><td>13.5879</td><td>16.3054</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>0.2911</td><td>0.5821</td><td>1.4553</td><td>4.3660</td><td>12.1277</td><td>16.9788</td><td>21.8298</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>0.3752</td><td>0.7505</td><td>1.8761</td><td>5.3604</td><td>14.7411</td><td>20.1015</td><td>25.4619</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>0.3949</td><td>0.7899</td><td>1.9747</td><td>5.6421</td><td>15.5157</td><td>21.1578</td><td>26.7999</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>0.4499</td><td>0.8998</td><td>2.2494</td><td>6.1859</td><td>16.8707</td><td>22.4942</td><td>28.1178</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>0.4706</td><td>0.9411</td><td>2.3528</td><td>6.5356</td><td>18.2998</td><td>22.8748</td><td>27.4497</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>0.4621</td><td>0.9241</td><td>2.3104</td><td>6.4177</td><td>17.9696</td><td>22.4620</td><td>26.9544</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>0.5986</td><td>1.1972</td><td>2.9929</td><td>8.9788</td><td>22.4470</td><td>27.6846</td><td>32.9223</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>0.5581</td><td>1.1163</td><td>2.7907</td><td>8.3721</td><td>20.2960</td><td>24.7357</td><td>29.1754</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>0.5542</td><td>1.1084</td><td>2.7710</td><td>8.3131</td><td>20.1530</td><td>24.5615</td><td>28.9700</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>0.5852</td><td>1.1703</td><td>2.9258</td><td>8.7773</td><td>20.7241</td><td>24.9909</td><td>29.2576</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>0.6561</td><td>1.3123</td><td>3.2807</td><td>9.8422</td><td>22.7127</td><td>27.7600</td><td>32.1764</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>0.6427</td><td>1.2855</td><td>3.2137</td><td>9.6412</td><td>22.2490</td><td>27.1933</td><td>31.5195</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>0.6589</td><td>1.3177</td><td>3.5296</td><td>10.5889</td><td>23.5308</td><td>28.2370</td><td>32.9431</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>0.7208</td><td>1.4417</td><td>3.6042</td><td>10.2976</td><td>22.6547</td><td>26.7738</td><td>30.8928</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>1.2416</td><td>2.4832</td><td>4.9664</td><td>14.8992</td><td>34.7647</td><td>42.2143</td><td>49.6639</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>One Railroad</th><th>Two Railroads</th><th>Three Railroads</th><th>Four Railroads</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>0.7682</td><td>1.5365</td><td>3.0730</td><td>6.1459</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>0.7268</td><td>1.4535</td><td>2.9070</td><td>5.8140</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>0.8103</td><td>1.6207</td><td>3.2413</td><td>6.4827</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>0.5726</td><td>1.1453</td><td>2.2906</td><td>4.5811</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>One Utility</th><th>Two Utilities</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>0.6903</td><td>1.7258</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>0.7507</td><td>1.8768</td></tr>
+</tbody></table>
+
+<a name="Income_per_roll_other"></a>
+<p>
+The following table details the expected income and expense from
+the non-property squares on the board.  The value for passing or
+landing on Go was arrived at through simulation, whereas the others
+were computed exactly.  The income associated with the Chance and
+Community Chest squares is somewhat high because I was unable to
+include the cards for property repairs since the cost is based on
+the number of buildings you own.  I also left out the Community
+Chest card where you collect $50 from each player and the Chance
+card where you pay each player $50.  These last two should even
+out in the long run.  I have assumed that landing on the Income
+Tax square always results in a $200 payment.
+</p>
+
+<h3>
+Average Income per Roll from other Squares
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Income per roll (Jail Short)</th><th>Income per roll (Jail Long)</th></tr>
+<tr align="center"><td align="left"><font color="#834B00">Go</font></td><td>33.7807</td><td>31.8657</td></tr>
+<tr align="center"><td align="left"><font color="#FFDB0F">Community Chest</font></td><td> 1.4669</td><td> 1.3496</td></tr>
+<tr align="center"><td align="left"><font color="#000000">Income Tax</font></td><td>-4.6571</td><td>-4.3869</td></tr>
+<tr align="center"><td align="left"><font color="#FA6C00">Chance</font></td><td> 0.8572</td><td> 0.8250</td></tr>
+<tr align="center"><td align="left"><font color="#000000">Luxury Tax</font></td><td>-1.6349</td><td>-1.5391</td></tr>
+<tr align="center"><td align="left">Total</td><td>29.8128</td><td>28.1144</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<a name="Payback"></a>
+<p>
+The following two sets of tables give the average number of
+opponent rolls needed to regain the cost of the last
+improvement to the property or the cost of the property
+itself.  These figures are quite useful for determining what
+improvements to make first.  Two of the groups of figures in
+this table are a bit fuzzy.  I have assumed that when one
+lands on a utility, the roll had the usual distribution
+probabilities, which isn't necessarily true, but it should
+be very close.  Also, when I give the payback number of
+rolls for the railroads, I average the payoff of the other
+railroads that might be owned.  For example, if you buy
+Pennsylvania Railroad and you already own another railroad,
+your payback is faster if that other railroad is B. and
+O. rather than Short Line.  So, I have averaged out the
+contributions from the other owned railroad.
+</p>
+
+<p>
+These numbers were calculated by taking the cost of whatever
+was bought and dividing it by the increased average rent
+from the table above.  Note that the figures in this table are
+rounded to four decimal places, but the ones used to make
+the calculations for the following table are to full
+precision.  In other words, if you try to calculate these
+numbers by using those in the table above, you won't get
+quite the same answer, and it will not be as accurate as
+what is here.  Once again, I have included a set of tables
+for a preferred short jail stay and for a long one.
+</p>
+
+<h3>
+Expected Number of Opponent Rolls to Recoup Incremental Cost (Short Jail Stay)
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Single Property</th><th>Last Property on Block</th><th>First House</th><th>Second House</th><th>Third House</th><th>Fourth House</th><th>Hotel</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>1407.5414</td><td>349.3427</td><td>390.9837</td><td>117.2951</td><td>39.0984</td><td>33.5129</td><td>26.0656</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>693.6732</td><td>278.2678</td><td>192.6870</td><td>57.8061</td><td>19.2687</td><td>16.5160</td><td>17.7865</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>736.7646</td><td>168.1402</td><td>122.7941</td><td>36.8382</td><td>12.2794</td><td>17.0023</td><td>14.7353</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>718.0923</td><td>167.1483</td><td>119.6820</td><td>35.9046</td><td>11.9682</td><td>16.5714</td><td>14.3618</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>652.0786</td><td>186.6135</td><td>90.5665</td><td>36.2266</td><td>10.8680</td><td>14.4906</td><td>14.4906</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>518.2000</td><td>130.4354</td><td>123.3810</td><td>37.0143</td><td>12.3381</td><td>21.1510</td><td>29.6114</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>590.1964</td><td>134.5674</td><td>140.5229</td><td>42.1569</td><td>14.0523</td><td>24.0896</td><td>33.7255</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>540.9301</td><td>145.5937</td><td>112.6938</td><td>33.8081</td><td>12.6780</td><td>20.2849</td><td>20.2849</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>460.4308</td><td>106.7308</td><td>85.2650</td><td>27.5471</td><td>10.2318</td><td>17.9056</td><td>17.9056</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>437.9757</td><td>105.4773</td><td>81.1066</td><td>26.2037</td><td>9.7328</td><td>17.0324</td><td>17.0324</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>405.1640</td><td>111.7834</td><td>67.5273</td><td>23.1522</td><td>8.5298</td><td>16.2066</td><td>16.2066</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>430.9902</td><td>102.3026</td><td>97.9523</td><td>33.0589</td><td>11.7543</td><td>30.2253</td><td>30.2253</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>446.7690</td><td>103.1675</td><td>101.5384</td><td>34.2692</td><td>12.1846</td><td>31.3319</td><td>31.3319</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>376.6757</td><td>105.3934</td><td>78.4741</td><td>23.5422</td><td>10.4632</td><td>26.9054</td><td>26.9054</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>436.5461</td><td>108.2805</td><td>83.9512</td><td>25.1854</td><td>11.7889</td><td>31.6616</td><td>31.6616</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>441.1645</td><td>108.5624</td><td>84.8393</td><td>25.4518</td><td>11.9136</td><td>31.9965</td><td>31.9965</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>451.1382</td><td>115.4050</td><td>80.5604</td><td>24.1681</td><td>11.8374</td><td>33.1448</td><td>33.1448</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>430.9623</td><td>108.1099</td><td>95.7694</td><td>28.7308</td><td>14.6471</td><td>37.3501</td><td>42.6858</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>439.5314</td><td>108.6412</td><td>97.6736</td><td>29.3021</td><td>14.9383</td><td>38.0927</td><td>43.5345</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>457.0280</td><td>115.1488</td><td>85.0850</td><td>26.6600</td><td>14.5418</td><td>39.9900</td><td>39.9900</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>457.3734</td><td>123.0895</td><td>87.1187</td><td>28.1461</td><td>15.2458</td><td>45.7373</td><td>45.7373</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>304.6501</td><td>117.9523</td><td>76.1625</td><td>19.0406</td><td>9.5203</td><td>25.3875</td><td>25.3875</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>First Railroad</th><th>Second Railroad</th><th>Third Railroad</th><th>Fourth Railroad</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>245.9926</td><td>84.0075</td><td>31.8937</td><td>12.8532</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>249.3562</td><td>84.6574</td><td>32.0431</td><td>12.8895</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>234.2459</td><td>81.6762</td><td>31.3501</td><td>12.7198</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>328.8612</td><td>98.0735</td><td>34.9375</td><td>13.5677</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>First Utility</th><th>Second Utility</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>208.6603</td><td>50.1991</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>188.9292</td><td>48.9687</td></tr>
+</tbody></table>
+
+
+<p>
+</p><hr>
+<p></p>
+<h3>
+Expected Number of Opponent Rolls to Recoup Incremental Cost (Long Jail Stay)
+</h3>
+<table border="8">
+<tbody><tr> <th>Square </th><th>Single Property</th><th>Last Property on Block</th><th>First House</th><th>Second House</th><th>Third House</th><th>Fourth House</th><th>Hotel</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>1494.5282</td><td>370.8991</td><td>415.1467</td><td>124.5440</td><td>41.5147</td><td>35.5840</td><td>27.6764</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>736.4116</td><td>295.4227</td><td>204.5588</td><td>61.3676</td><td>20.4559</td><td>17.5336</td><td>18.8823</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>781.8495</td><td>178.4163</td><td>130.3083</td><td>39.0925</td><td>13.0308</td><td>18.0427</td><td>15.6370</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>761.9564</td><td>177.3596</td><td>126.9927</td><td>38.0978</td><td>12.6993</td><td>17.5836</td><td>15.2391</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>691.8736</td><td>198.0109</td><td>96.0936</td><td>38.4374</td><td>11.5312</td><td>15.3750</td><td>15.3750</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>547.7404</td><td>137.3005</td><td>130.4144</td><td>39.1243</td><td>13.0414</td><td>22.3568</td><td>31.2995</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>643.9566</td><td>142.6429</td><td>153.3230</td><td>45.9969</td><td>15.3323</td><td>26.2839</td><td>36.7975</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>549.7065</td><td>151.6400</td><td>114.5222</td><td>34.3567</td><td>12.8837</td><td>20.6140</td><td>20.6140</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>479.7082</td><td>112.8324</td><td>88.8348</td><td>28.7005</td><td>10.6602</td><td>18.6553</td><td>18.6553</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>455.7593</td><td>111.4549</td><td>84.3999</td><td>27.2677</td><td>10.1280</td><td>17.7240</td><td>17.7240</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>444.5587</td><td>119.7646</td><td>74.0931</td><td>25.4034</td><td>9.3591</td><td>17.7823</td><td>17.7823</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>467.5215</td><td>109.9014</td><td>106.2549</td><td>35.8610</td><td>12.7506</td><td>32.7872</td><td>32.7872</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>476.1134</td><td>110.3696</td><td>108.2076</td><td>36.5201</td><td>12.9849</td><td>33.3898</td><td>33.3898</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>400.9446</td><td>112.6859</td><td>83.5301</td><td>25.0590</td><td>11.1373</td><td>28.6389</td><td>28.6389</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>465.8340</td><td>115.2667</td><td>89.5835</td><td>26.8750</td><td>12.5798</td><td>33.7858</td><td>33.7858</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>469.1373</td><td>115.4679</td><td>90.2187</td><td>27.0656</td><td>12.6690</td><td>34.0253</td><td>34.0253</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>478.5081</td><td>122.6644</td><td>85.4479</td><td>25.6344</td><td>12.5556</td><td>35.1557</td><td>35.1557</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>457.2156</td><td>114.7708</td><td>101.6035</td><td>30.4810</td><td>15.5394</td><td>39.6253</td><td>45.2861</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>466.7445</td><td>115.3620</td><td>103.7210</td><td>31.1163</td><td>15.8632</td><td>40.4512</td><td>46.2299</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>485.6852</td><td>122.2951</td><td>90.4201</td><td>28.3316</td><td>15.4536</td><td>42.4975</td><td>42.4975</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>485.5496</td><td>130.4382</td><td>92.4856</td><td>29.8800</td><td>16.1850</td><td>48.5550</td><td>48.5550</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>322.1658</td><td>124.8429</td><td>80.5414</td><td>20.1354</td><td>10.0677</td><td>26.8471</td><td>26.8471</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>First Railroad</th><th>Second Railroad</th><th>Third Railroad</th><th>Fourth Railroad</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>260.3346</td><td>89.2966</td><td>33.9793</td><td>13.7128</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>275.1957</td><td>92.1411</td><td>34.6302</td><td>13.8707</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>246.8124</td><td>86.5847</td><td>33.3434</td><td>13.5564</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>349.2577</td><td>104.5080</td><td>37.2832</td><td>14.4902</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square </th><th>First Utility</th><th>Second Utility</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>217.2844</td><td>52.5958</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>199.8068</td><td>51.5053</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<a name="Mortgage"></a>
+<p>
+It's also useful to know what the payback times are
+involving mortgages.  For example, if you own all
+of the red properties and have no houses on them,
+you may want to know which one to mortgage so that
+you lose the least income while it's mortgaged.
+Below there are two sets of tables -- for both
+short and long jail stay strategies -- containing
+the expected number of opponent rolls it takes on
+average to lose the mortgage value of each property
+due to lost rent and the expected number of opponent
+rolls it takes to pay back the cost of unmortgaging
+each property.  I have included values for all of
+the different possible ownership situations.  The
+calculations were performed in the same way as in
+the tables above.
+</p>
+
+<h3>
+Expected Number of Opponent Rolls to Lose or Recoup Mortgages (Short Jail Stay)
+</h3>
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Property</th><th>Mortgage Property on Full Block</th><th>Unmortgage Single Property</th><th>Unmortgage Property on Full Block</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>703.7707</td><td>351.8853</td><td>774.1478</td><td>387.0739</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>346.8366</td><td>173.4183</td><td>381.5203</td><td>190.7601</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>368.3823</td><td>184.1911</td><td>405.2205</td><td>202.6103</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>359.0461</td><td>179.5231</td><td>394.9508</td><td>197.4754</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>326.0393</td><td>163.0197</td><td>358.6433</td><td>179.3216</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>259.1000</td><td>129.5500</td><td>285.0100</td><td>142.5050</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>295.0982</td><td>147.5491</td><td>324.6080</td><td>162.3040</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>270.4650</td><td>135.2325</td><td>297.5115</td><td>148.7558</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>230.2154</td><td>115.1077</td><td>253.2370</td><td>126.6185</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>218.9878</td><td>109.4939</td><td>240.8866</td><td>120.4433</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>202.5820</td><td>101.2910</td><td>222.8402</td><td>111.4201</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>215.4951</td><td>107.7476</td><td>237.0446</td><td>118.5223</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>223.3845</td><td>111.6923</td><td>245.7230</td><td>122.8615</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>188.3378</td><td>94.1689</td><td>207.1716</td><td>103.5858</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>218.2731</td><td>109.1365</td><td>240.1004</td><td>120.0502</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>220.5823</td><td>110.2911</td><td>242.6405</td><td>121.3202</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>225.5691</td><td>112.7845</td><td>248.1260</td><td>124.0630</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>215.4811</td><td>107.7406</td><td>237.0292</td><td>118.5146</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>219.7657</td><td>109.8829</td><td>241.7423</td><td>120.8711</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>228.5140</td><td>114.2570</td><td>251.3654</td><td>125.6827</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>228.6867</td><td>114.3434</td><td>250.9020</td><td>125.4510</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>152.3250</td><td>76.1625</td><td>167.5576</td><td>83.7788</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Railroad</th><th>Mortgage One of Two Railroads</th><th>Mortgage One of Three Railroads</th><th>Mortgage One of Four Railroads</th><th>Unmortgage Single Railroad</th><th>Unmortgage One of Two Railroads</th><th>Unmortgage One of Three Railroads</th><th>Unmortgage One of Four Railroads</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>122.9963</td><td>61.4982</td><td>30.7491</td><td>15.3745</td><td>135.2960</td><td>67.6480</td><td>33.8240</td><td>16.9120</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>124.6781</td><td>62.3390</td><td>31.1695</td><td>15.5848</td><td>137.1459</td><td>68.5729</td><td>34.2865</td><td>17.1432</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>117.1230</td><td>58.5615</td><td>29.2807</td><td>14.6404</td><td>128.8353</td><td>64.4176</td><td>32.2088</td><td>16.1044</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>164.4306</td><td>82.2153</td><td>41.1076</td><td>20.5538</td><td>180.8737</td><td>90.4368</td><td>45.2184</td><td>22.6092</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Utility</th><th>Mortgage One of Two Utilities</th><th>Unmortgage Single Utility</th><th>Unmortgage One of Two Utilities</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>104.3301</td><td>41.7321</td><td>114.0676</td><td>45.6271</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>94.4646</td><td>37.7858</td><td>103.2813</td><td>41.3125</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<h3>
+Expected Number of Opponent Rolls to Lose or Recoup Mortgages (Long Jail Stay)
+</h3>
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Property</th><th>Mortgage Property on Full Block</th><th>Unmortgage Single Property</th><th>Unmortgage Property on Full Block</th></tr>
+<tr align="center"><td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>747.2641</td><td>373.6320</td><td>821.9905</td><td>410.9953</td></tr>
+<tr align="center"><td align="left"><font color="#401060">Baltic Avenue</font></td><td>368.2058</td><td>184.1029</td><td>405.0264</td><td>202.5132</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>390.9248</td><td>195.4624</td><td>430.0172</td><td>215.0086</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>380.9782</td><td>190.4891</td><td>419.0760</td><td>209.5380</td></tr>
+<tr align="center"><td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>345.9368</td><td>172.9684</td><td>380.5305</td><td>190.2652</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">St. Charles Place</font></td><td>273.8702</td><td>136.9351</td><td>301.2572</td><td>150.6286</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">States Avenue</font></td><td>321.9783</td><td>160.9891</td><td>354.1761</td><td>177.0881</td></tr>
+<tr align="center"><td align="left"><font color="#B40094">Virginia Avenue</font></td><td>274.8533</td><td>137.4266</td><td>302.3386</td><td>151.1693</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">St. James Place</font></td><td>239.8541</td><td>119.9270</td><td>263.8395</td><td>131.9198</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>227.8797</td><td>113.9398</td><td>250.6676</td><td>125.3338</td></tr>
+<tr align="center"><td align="left"><font color="#FF9400">New York Avenue</font></td><td>222.2793</td><td>111.1397</td><td>244.5073</td><td>122.2536</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>233.7608</td><td>116.8804</td><td>257.1368</td><td>128.5684</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>238.0567</td><td>119.0284</td><td>261.8624</td><td>130.9312</td></tr>
+<tr align="center"><td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>200.4723</td><td>100.2361</td><td>220.5195</td><td>110.2598</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>232.9170</td><td>116.4585</td><td>256.2087</td><td>128.1043</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>234.5687</td><td>117.2843</td><td>258.0255</td><td>129.0128</td></tr>
+<tr align="center"><td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>239.2540</td><td>119.6270</td><td>263.1795</td><td>131.5897</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pacific Avenue</font></td><td>228.6078</td><td>114.3039</td><td>251.4686</td><td>125.7343</td></tr>
+<tr align="center"><td align="left"><font color="#169919">North Carolina Avenue</font></td><td>233.3722</td><td>116.6861</td><td>256.7095</td><td>128.3547</td></tr>
+<tr align="center"><td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>242.8426</td><td>121.4213</td><td>267.1269</td><td>133.5634</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Park Place</font></td><td>242.7748</td><td>121.3874</td><td>266.3586</td><td>133.1793</td></tr>
+<tr align="center"><td align="left"><font color="#0000EE">Boardwalk</font></td><td>161.0829</td><td>80.5414</td><td>177.1912</td><td>88.5956</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Railroad</th><th>Mortgage One of Two Railroads</th><th>Mortgage One of Three Railroads</th><th>Mortgage One of Four Railroads</th><th>Unmortgage Single Railroad</th><th>Unmortgage One of Two Railroads</th><th>Unmortgage One of Three Railroads</th><th>Unmortgage One of Four Railroads</th></tr>
+<tr align="center"><td align="left"><font color="#838383">Reading Railroad</font></td><td>130.1673</td><td>65.0836</td><td>32.5418</td><td>16.2709</td><td>143.1840</td><td>71.5920</td><td>35.7960</td><td>17.8980</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>137.5978</td><td>68.7989</td><td>34.3995</td><td>17.1997</td><td>151.3576</td><td>75.6788</td><td>37.8394</td><td>18.9197</td></tr>
+<tr align="center"><td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>123.4062</td><td>61.7031</td><td>30.8515</td><td>15.4258</td><td>135.7468</td><td>67.8734</td><td>33.9367</td><td>16.9684</td></tr>
+<tr align="center"><td align="left"><font color="#838383">Short Line</font></td><td>174.6288</td><td>87.3144</td><td>43.6572</td><td>21.8286</td><td>192.0917</td><td>96.0459</td><td>48.0229</td><td>24.0115</td></tr>
+</tbody></table>
+
+<table border="8">
+<tbody><tr> <th>Square</th><th>Mortgage Single Utility</th><th>Mortgage One of Two Utilities</th><th>Unmortgage Single Utility</th><th>Unmortgage One of Two Utilities</th></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Electric Company</font></td><td>108.6422</td><td>43.4569</td><td>118.7821</td><td>47.5128</td></tr>
+<tr align="center"><td align="left"><font color="#2BFFB3">Water Works</font></td><td>99.9034</td><td>39.9614</td><td>109.2277</td><td>43.6911</td></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+
+<a name="Conclusions"></a>
+<p>
+So, now that we have all of this data, how can it be used to
+play better Monopoly®?  It should be possible to add up
+all of the expected income values for all of the properties
+in a partially completed game and get an estimate of who is
+likely to win in the end.  Of course, this ignores lots of
+factors in a particular game such as cash on hand, bargaining,
+and luck.  The capricious nature of short-term probability
+insures that you never know what will happen in the
+next few rounds.
+</p>
+
+<p>
+It's also possible to make some
+general observations about the properties.  The railroads
+are excellent investments, particularly when owned together,
+although in absolute income terms they don't keep up with
+heavily built on properties later in the game.
+The best return on investment
+to be found is from putting a third house on New York Avenue.
+In fact, the third house has the fastest payoff of any
+building on almost all of the properties.
+The square most landed on other than Jail is Illinois
+Avenue, and in fact a hotel there will bring the most income
+other than a hotel on Boardwalk.  By far the worst
+individual investment is to buy Medeterranean Avenue without
+first owning Baltic.  That's not to say that you shouldn't
+buy it, but it's not going to make you much money without
+quite a bit of construction.  The properties between the Jail
+square and the Go To Jail square are landed on the most,
+because of the jump caused by landing on Go To Jail.  The
+Orange ones have the biggest bang for the buck as far as
+building goes.
+</p>
+
+<p>
+One more thing is worth pointing out if it's not obvious.
+The numbers given here are all long term averages.  They are
+useful as guidelines, but particular circumstances must be
+considered in practice.  For example, if you have the
+opportunity to put a house on either Illinois Avenue or
+Marvin Gardens, in general you should put it on Illinois
+Avenue.  If one of your opponent's tokens is currently on
+Indiana Avenue, however, then he's got about a 14% chance
+of landing on Marvin Gardens on the next roll but no chance
+of landing on Illinois Avenue.  Considering this, it's
+better to put the new house on Marvin Gardens in this
+particular situation.
+</p>
+
+<a name="Markov"></a>
+<p>
+Here are the two Markov matrices, which are quite large.
+The point of these tables is to show how likely you are to
+land on any square of the board starting from any other
+square.  For example, the figures in the Baltic Avenue row
+are the probabilities that you will land on each one of
+those squares with one roll of the dice starting on Baltic
+Avenue.  Similarly, the column associated with Baltic Avenue
+contains the probabilities that you will land on Baltic in
+one roll starting from any other square (those appearing in
+the left-most column).  Note that these numbers take into
+account the probability that the two previous rolls before
+this one were doubles.  Because this table is so large, I've
+duplicated the row and column headings a couple of times for
+readability.
+</p>
+
+<h4>
+Individual Square Probabilities for Preferred Short Term Jail Stay (as Percentages)
+</h4>
+<table border="8">
+<tbody><tr><th>Square
+</th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Go</font></td><td>1.212</td><td>0.000</td><td>2.384</td><td>5.556</td><td>9.322</td><td>12.153</td><td>13.836</td><td>6.250</td><td>13.836</td><td>11.111</td><td>8.280</td><td align="center"><font color="#834B00">Go</font></td><td>6.597</td><td>3.766</td><td>0.000</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>1.531</td><td align="center"><font color="#834B00">Go</font></td></tr>
+<tr align="center"> <td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>0.863</td><td>0.000</td><td>0.000</td><td>2.695</td><td>6.418</td><td>9.113</td><td>11.111</td><td>5.177</td><td>16.667</td><td>13.806</td><td>11.111</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>9.113</td><td>6.418</td><td>2.695</td><td>0.000</td><td>1.726</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>1.361</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDB0F">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.423</td><td>6.250</td><td>8.284</td><td>4.167</td><td>13.840</td><td>16.667</td><td>13.840</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>11.806</td><td>8.979</td><td>5.556</td><td>2.729</td><td>1.389</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.990</td><td align="center"><font color="#FFDB0F">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#401060">Baltic Avenue</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>3.214</td><td>5.556</td><td>3.095</td><td>11.111</td><td>13.809</td><td>16.667</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>14.325</td><td>11.627</td><td>8.254</td><td>5.556</td><td>3.730</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.993</td><td align="center"><font color="#401060">Baltic Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#000000">Income Tax</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.347</td><td>2.720</td><td>2.083</td><td>8.275</td><td>11.111</td><td>13.831</td><td align="center"><font color="#000000">Income Tax</font></td><td>17.014</td><td>14.178</td><td>11.111</td><td>8.275</td><td>6.250</td><td>2.720</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Income Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Income Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.695</td><td align="center"><font color="#000000">Income Tax</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Reading Railroad</font></td><td>0.338</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.169</td><td>0.000</td><td>1.014</td><td>5.556</td><td>8.261</td><td>11.111</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>13.985</td><td>16.836</td><td>13.816</td><td>11.111</td><td>8.599</td><td>5.556</td><td>2.367</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.773</td><td align="center"><font color="#838383">Reading Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.721</td><td>5.556</td><td>8.277</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>11.111</td><td>13.833</td><td>16.667</td><td>13.833</td><td>11.111</td><td>8.277</td><td>4.861</td><td>2.721</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.685</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.703</td><td>5.556</td><td align="center"><font color="#FA6C00">Chance</font></td><td>8.259</td><td>11.111</td><td>13.814</td><td>16.667</td><td>13.814</td><td>11.111</td><td>7.226</td><td>5.556</td><td>2.703</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.965</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.723</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>5.556</td><td>8.278</td><td>11.111</td><td>13.834</td><td>16.667</td><td>13.834</td><td>9.722</td><td>8.278</td><td>5.556</td><td>2.723</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.026</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>2.711</td><td>5.556</td><td>8.267</td><td>11.111</td><td>13.822</td><td>16.667</td><td>12.094</td><td>11.111</td><td>8.267</td><td>5.556</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>2.711</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.264</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Visiting Jail</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>0.170</td><td>2.715</td><td>5.556</td><td>8.271</td><td>11.111</td><td>13.826</td><td>14.583</td><td>13.826</td><td>11.281</td><td>8.271</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>5.556</td><td>1.018</td><td>0.000</td><td>0.170</td><td>0.339</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>1.586</td><td align="center"><font color="#834B00">Visiting Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#B40094">St. Charles Place</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>0.347</td><td>0.000</td><td>2.711</td><td>5.556</td><td>8.267</td><td>11.111</td><td>12.095</td><td>16.667</td><td>14.170</td><td>11.111</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>8.267</td><td>2.083</td><td>2.711</td><td>0.347</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>1.610</td><td align="center"><font color="#B40094">St. Charles Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2BFFB3">Electric Company</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>2.714</td><td>5.556</td><td>8.270</td><td>9.722</td><td>13.825</td><td>17.184</td><td>13.825</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>11.111</td><td>3.101</td><td>5.556</td><td>3.231</td><td>1.034</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>1.593</td><td align="center"><font color="#2BFFB3">Electric Company</font></td></tr>
+<tr align="center"> <td align="left"><font color="#B40094">States Avenue</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">States Avenue</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.717</td><td>5.556</td><td>7.238</td><td>11.111</td><td>14.522</td><td>16.667</td><td align="center"><font color="#B40094">States Avenue</font></td><td>13.828</td><td>4.167</td><td>8.272</td><td>6.250</td><td>4.106</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">States Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>1.578</td><td align="center"><font color="#B40094">States Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#B40094">Virginia Avenue</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.716</td><td>4.861</td><td>8.271</td><td>11.975</td><td>13.827</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>16.667</td><td>5.185</td><td>11.111</td><td>9.135</td><td>7.284</td><td>2.716</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>1.585</td><td align="center"><font color="#B40094">Virginia Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>1.212</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.381</td><td>5.556</td><td>9.319</td><td>11.111</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>13.833</td><td>6.250</td><td>13.833</td><td>12.153</td><td>10.361</td><td>5.556</td><td>2.722</td><td>1.042</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>1.548</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">St. James Place</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.718</td><td>6.420</td><td>8.273</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>11.111</td><td>5.186</td><td>16.667</td><td>14.693</td><td>12.840</td><td>8.273</td><td>5.556</td><td>3.582</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>1.225</td><td align="center"><font color="#FF9400">St. James Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDBOF">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.424</td><td>5.556</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>8.285</td><td>4.167</td><td>13.840</td><td>17.361</td><td>15.229</td><td>11.111</td><td>8.285</td><td>6.250</td><td>2.729</td><td>0.000</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.986</td><td align="center"><font color="#FFDBOF">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>2.718</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>5.556</td><td>3.102</td><td>11.111</td><td>14.346</td><td>17.701</td><td>13.829</td><td>11.111</td><td>8.790</td><td>5.556</td><td>0.000</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>3.595</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">New York Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>2.730</td><td>2.083</td><td>8.286</td><td>11.458</td><td>14.536</td><td>16.667</td><td>13.842</td><td>11.458</td><td>8.286</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>2.730</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>6.187</td><td align="center"><font color="#FF9400">New York Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Free Parking</font></td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>0.000</td><td>1.017</td><td>5.556</td><td>8.438</td><td>11.450</td><td>13.824</td><td>16.667</td><td>13.994</td><td>11.111</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>5.556</td><td>2.713</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>8.827</td><td align="center"><font color="#834B00">Free Parking</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>0.000</td><td>0.000</td><td>2.724</td><td>5.556</td><td>8.280</td><td>11.111</td><td>13.836</td><td>16.667</td><td>13.836</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>8.280</td><td>5.556</td><td>2.384</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>11.602</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.706</td><td>5.556</td><td>8.262</td><td>11.111</td><td>13.817</td><td>16.667</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>11.111</td><td>8.262</td><td>4.861</td><td>2.706</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>14.593</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.720</td><td>5.556</td><td>8.276</td><td>11.111</td><td>13.831</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>13.831</td><td>11.111</td><td>7.241</td><td>5.556</td><td>2.720</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>17.531</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>0.874</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.508</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>0.169</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>2.709</td><td>5.556</td><td>8.265</td><td>11.111</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>16.667</td><td>13.820</td><td>9.870</td><td>8.265</td><td>5.556</td><td>1.016</td><td>0.000</td><td>0.000</td><td>0.169</td><td>15.107</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>1.233</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>2.717</td><td>5.556</td><td>8.273</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>13.829</td><td>16.667</td><td>12.404</td><td>11.111</td><td>8.273</td><td>2.083</td><td>2.717</td><td>0.000</td><td>0.347</td><td>12.706</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>1.591</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.550</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>0.517</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.711</td><td>5.556</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>11.111</td><td>13.822</td><td>15.035</td><td>13.822</td><td>11.111</td><td>3.100</td><td>5.556</td><td>2.711</td><td>0.517</td><td>10.259</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>1.602</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.714</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>8.269</td><td>11.111</td><td>12.704</td><td>16.667</td><td>13.825</td><td>4.167</td><td>8.269</td><td>5.556</td><td>3.408</td><td>7.541</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2BFFB3">Water Works</font></td><td>4.323</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.592</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>0.864</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>5.556</td><td>8.266</td><td>10.478</td><td>13.822</td><td>16.667</td><td>5.183</td><td>11.111</td><td>8.266</td><td>6.419</td><td>4.724</td><td align="center"><font color="#2BFFB3">Water Works</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>7.179</td><td>2.710</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.125</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>1.042</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>2.710</td><td>5.556</td><td>8.144</td><td>11.111</td><td>13.821</td><td>6.250</td><td>13.821</td><td>11.111</td><td>9.307</td><td>2.031</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Go To Jail</font></td><td>9.776</td><td>5.556</td><td>2.431</td><td>0.000</td><td>0.000</td><td>2.604</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.868</td><td>0.868</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.868</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.000</td><td>2.778</td><td>5.621</td><td>8.333</td><td>11.111</td><td>5.208</td><td>16.667</td><td>13.889</td><td>11.979</td><td>1.443</td><td align="center"><font color="#834B00">Go To Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#169919">Pacific Avenue</font></td><td>12.365</td><td>8.265</td><td>4.861</td><td>2.709</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.000</td><td>0.000</td><td>2.978</td><td>5.556</td><td>8.265</td><td>4.167</td><td>13.820</td><td>16.667</td><td>14.515</td><td>1.667</td><td align="center"><font color="#169919">Pacific Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#169919">North Carolina Avenue</font></td><td>14.904</td><td>11.111</td><td>7.246</td><td>5.556</td><td>2.726</td><td>1.553</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.518</td><td>0.518</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.518</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.000</td><td>0.000</td><td>0.453</td><td>2.726</td><td>5.556</td><td>3.105</td><td>11.111</td><td>13.837</td><td>17.184</td><td>1.381</td><td align="center"><font color="#169919">North Carolina Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDB0F">Community Chest</font></td><td>17.730</td><td>13.817</td><td>9.722</td><td>8.261</td><td>5.556</td><td>3.747</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.304</td><td>0.000</td><td>2.705</td><td>2.083</td><td>8.261</td><td>11.111</td><td>14.164</td><td>1.498</td><td align="center"><font color="#FFDB0F">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>14.885</td><td>16.667</td><td>12.109</td><td>11.111</td><td>8.284</td><td>6.067</td><td>2.728</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.171</td><td>0.171</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.171</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.000</td><td>0.000</td><td>0.149</td><td>0.000</td><td>0.000</td><td>1.023</td><td>5.556</td><td>8.284</td><td>11.282</td><td>1.345</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Short Line</font></td><td>12.322</td><td>13.813</td><td>14.583</td><td>13.813</td><td>11.280</td><td>8.426</td><td>5.556</td><td>1.013</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.169</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.338</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.702</td><td>5.556</td><td>8.426</td><td>1.667</td><td align="center"><font color="#838383">Short Line</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>9.487</td><td>11.111</td><td>12.102</td><td>16.667</td><td>14.179</td><td>11.458</td><td>8.276</td><td>2.083</td><td>2.720</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.720</td><td>5.903</td><td>1.557</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#0000EE">Park Place</font></td><td>6.766</td><td>8.249</td><td>9.722</td><td>13.805</td><td>17.182</td><td>14.321</td><td>11.111</td><td>3.094</td><td>5.556</td><td>2.694</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.516</td><td>0.516</td><td>0.000</td><td>0.000</td><td>1.031</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.209</td><td>1.714</td><td align="center"><font color="#0000EE">Park Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#000000">Luxury Tax</font></td><td>3.939</td><td>5.556</td><td>7.247</td><td>11.111</td><td>14.532</td><td>17.361</td><td>13.838</td><td>4.167</td><td>8.282</td><td>5.556</td><td>2.727</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>1.389</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>1.519</td><td align="center"><font color="#000000">Luxury Tax</font></td></tr>
+<tr align="center"> <td align="left"><font color="#0000EE">Boardwalk</font></td><td>1.210</td><td>2.698</td><td>4.861</td><td>8.254</td><td>11.974</td><td>14.673</td><td>16.667</td><td>5.179</td><td>11.111</td><td>8.254</td><td>5.556</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>3.562</td><td>0.863</td><td>0.000</td><td>0.000</td><td>1.726</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>1.686</td><td align="center"><font color="#0000EE">Boardwalk</font></td></tr>
+<tr align="center"> <td align="left"><font color="#DD7800">In Jail</font></td><td>1.215</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.174</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#DD7800">In Jail</font></td><td>0.174</td><td>2.778</td><td>5.556</td><td>8.333</td><td>11.111</td><td>13.889</td><td>14.583</td><td>13.889</td><td>11.285</td><td>8.333</td><td align="center"><font color="#DD7800">In Jail</font></td><td>5.556</td><td>1.042</td><td>0.000</td><td>0.174</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.174</td><td>0.000</td><td>0.000</td><td align="center"><font color="#DD7800">In Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.174</td><td>1.215</td><td align="center"><font color="#DD7800">In Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+</tbody></table>
+
+<p>
+</p><hr>
+<p></p>
+<h4>
+Individual Square Probabilities for Preferred Long Term Jail Stay (as Percentages)
+</h4>
+<table border="8">
+<tbody><tr><th>Square
+</th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Go</font></td><td>1.212</td><td>0.000</td><td>2.383</td><td>5.556</td><td>9.321</td><td>12.153</td><td>13.835</td><td>6.250</td><td>13.835</td><td>11.111</td><td>8.279</td><td align="center"><font color="#834B00">Go</font></td><td>6.597</td><td>3.765</td><td>0.000</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>1.538</td><td align="center"><font color="#834B00">Go</font></td></tr>
+<tr align="center"> <td align="left"><font color="#401060">Mediterranean Avenue</font></td><td>0.863</td><td>0.000</td><td>0.000</td><td>2.695</td><td>6.418</td><td>9.113</td><td>11.111</td><td>5.177</td><td>16.667</td><td>13.806</td><td>11.111</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>9.113</td><td>6.418</td><td>2.695</td><td>0.000</td><td>1.726</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>1.361</td><td align="center"><font color="#401060">Mediterranean Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDB0F">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.423</td><td>6.250</td><td>8.284</td><td>4.167</td><td>13.840</td><td>16.667</td><td>13.840</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>11.806</td><td>8.979</td><td>5.556</td><td>2.729</td><td>1.389</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.990</td><td align="center"><font color="#FFDB0F">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#401060">Baltic Avenue</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>3.214</td><td>5.556</td><td>3.095</td><td>11.111</td><td>13.809</td><td>16.667</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>14.325</td><td>11.627</td><td>8.253</td><td>5.556</td><td>3.730</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#401060">Baltic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.995</td><td align="center"><font color="#401060">Baltic Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#000000">Income Tax</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.347</td><td>2.720</td><td>2.083</td><td>8.275</td><td>11.111</td><td>13.831</td><td align="center"><font color="#000000">Income Tax</font></td><td>17.014</td><td>14.178</td><td>11.111</td><td>8.275</td><td>6.250</td><td>2.720</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Income Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Income Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.695</td><td align="center"><font color="#000000">Income Tax</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Reading Railroad</font></td><td>0.338</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.169</td><td>0.000</td><td>1.014</td><td>5.556</td><td>8.259</td><td>11.111</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>13.984</td><td>16.836</td><td>13.815</td><td>11.111</td><td>8.597</td><td>5.556</td><td>2.366</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Reading Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.781</td><td align="center"><font color="#838383">Reading Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.721</td><td>5.556</td><td>8.277</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>11.111</td><td>13.832</td><td>16.667</td><td>13.832</td><td>11.111</td><td>8.277</td><td>4.861</td><td>2.721</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.686</td><td align="center"><font color="#2CD2D2">Oriental Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.702</td><td>5.556</td><td align="center"><font color="#FA6C00">Chance</font></td><td>8.258</td><td>11.111</td><td>13.813</td><td>16.667</td><td>13.813</td><td>11.111</td><td>7.226</td><td>5.556</td><td>2.702</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.969</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.722</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>5.556</td><td>8.278</td><td>11.111</td><td>13.833</td><td>16.667</td><td>13.833</td><td>9.722</td><td>8.278</td><td>5.556</td><td>2.722</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.027</td><td align="center"><font color="#2CD2D2">Vermont Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>2.710</td><td>5.556</td><td>8.266</td><td>11.111</td><td>13.821</td><td>16.667</td><td>12.094</td><td>11.111</td><td>8.266</td><td>5.556</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>2.710</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.269</td><td align="center"><font color="#2CD2D2">Connecticut Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Visiting Jail</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>0.170</td><td>2.715</td><td>5.556</td><td>8.271</td><td>11.111</td><td>13.826</td><td>14.583</td><td>13.826</td><td>11.281</td><td>8.271</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>5.556</td><td>1.018</td><td>0.000</td><td>0.170</td><td>0.339</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Visiting Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>1.588</td><td align="center"><font color="#834B00">Visiting Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#B40094">St. Charles Place</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>0.347</td><td>0.000</td><td>2.710</td><td>5.556</td><td>8.265</td><td>11.111</td><td>12.093</td><td>16.667</td><td>14.168</td><td>11.111</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>8.265</td><td>2.083</td><td>2.710</td><td>0.347</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">St. Charles Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>1.621</td><td align="center"><font color="#B40094">St. Charles Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2BFFB3">Electric Company</font></td><td>1.212</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>2.718</td><td>5.556</td><td>8.273</td><td>9.722</td><td>13.829</td><td>17.184</td><td>13.829</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>11.111</td><td>3.103</td><td>5.556</td><td>3.235</td><td>1.034</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Electric Company</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>1.571</td><td align="center"><font color="#2BFFB3">Electric Company</font></td></tr>
+<tr align="center"> <td align="left"><font color="#B40094">States Avenue</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">States Avenue</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.714</td><td>5.556</td><td>7.236</td><td>11.111</td><td>14.520</td><td>16.667</td><td align="center"><font color="#B40094">States Avenue</font></td><td>13.825</td><td>4.167</td><td>8.270</td><td>6.250</td><td>4.103</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">States Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>1.592</td><td align="center"><font color="#B40094">States Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#B40094">Virginia Avenue</font></td><td>1.211</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.713</td><td>4.861</td><td>8.269</td><td>11.975</td><td>13.824</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>16.667</td><td>5.184</td><td>11.111</td><td>9.133</td><td>7.284</td><td>2.713</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td align="center"><font color="#B40094">Virginia Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>1.598</td><td align="center"><font color="#B40094">Virginia Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Pennsylvania Railroad</font></td><td>1.212</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.379</td><td>5.556</td><td>9.316</td><td>11.111</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>13.830</td><td>6.250</td><td>13.830</td><td>12.153</td><td>10.358</td><td>5.556</td><td>2.719</td><td>1.042</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>1.566</td><td align="center"><font color="#838383">Pennsylvania Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">St. James Place</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>0.864</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.709</td><td>6.419</td><td>8.265</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>11.111</td><td>5.183</td><td>16.667</td><td>14.684</td><td>12.839</td><td>8.265</td><td>5.556</td><td>3.573</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">St. James Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.864</td><td>1.274</td><td align="center"><font color="#FF9400">St. James Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDBOF">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.420</td><td>5.556</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>8.281</td><td>4.167</td><td>13.837</td><td>17.361</td><td>15.226</td><td>11.111</td><td>8.281</td><td>6.250</td><td>2.726</td><td>0.000</td><td align="center"><font color="#FFDBOF">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>1.008</td><td align="center"><font color="#FFDBOF">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">Tennessee Avenue</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>2.706</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>5.556</td><td>3.098</td><td>11.111</td><td>14.334</td><td>17.699</td><td>13.817</td><td>11.111</td><td>8.778</td><td>5.556</td><td>0.000</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>3.652</td><td align="center"><font color="#FF9400">Tennessee Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF9400">New York Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>2.727</td><td>2.083</td><td>8.283</td><td>11.458</td><td>14.533</td><td>16.667</td><td>13.839</td><td>11.458</td><td>8.283</td><td>0.000</td><td align="center"><font color="#FF9400">New York Avenue</font></td><td>2.727</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>6.205</td><td align="center"><font color="#FF9400">New York Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Free Parking</font></td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>0.000</td><td>1.012</td><td>5.556</td><td>8.422</td><td>11.448</td><td>13.809</td><td>16.667</td><td>13.978</td><td>11.111</td><td>0.000</td><td align="center"><font color="#834B00">Free Parking</font></td><td>5.556</td><td>2.698</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>8.901</td><td align="center"><font color="#834B00">Free Parking</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Kentucky Avenue</font></td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>0.000</td><td>0.000</td><td>2.723</td><td>5.556</td><td>8.279</td><td>11.111</td><td>13.834</td><td>16.667</td><td>13.834</td><td>0.000</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td><td>8.279</td><td>5.556</td><td>2.383</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>11.610</td><td align="center"><font color="#FF0000">Kentucky Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.689</td><td>5.556</td><td>8.244</td><td>11.111</td><td>13.800</td><td>16.667</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>11.111</td><td>8.244</td><td>4.861</td><td>2.689</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>14.680</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Indiana Avenue</font></td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.720</td><td>5.556</td><td>8.276</td><td>11.111</td><td>13.831</td><td>0.000</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td><td>13.831</td><td>11.111</td><td>7.241</td><td>5.556</td><td>2.720</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>17.531</td><td align="center"><font color="#FF0000">Indiana Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FF0000">Illinois Avenue</font></td><td>0.873</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.504</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>0.168</td><td>0.168</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.168</td><td>0.000</td><td>2.686</td><td>5.556</td><td>8.241</td><td>11.111</td><td>0.000</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td><td>16.667</td><td>13.797</td><td>9.869</td><td>8.241</td><td>5.556</td><td>1.007</td><td>0.000</td><td>0.000</td><td>0.168</td><td>15.222</td><td align="center"><font color="#FF0000">Illinois Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">B &amp; O Railroad</font></td><td>1.233</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>2.716</td><td>5.556</td><td>8.271</td><td>0.000</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td><td>13.827</td><td>16.667</td><td>12.402</td><td>11.111</td><td>8.271</td><td>2.083</td><td>2.716</td><td>0.000</td><td>0.347</td><td>12.716</td><td align="center"><font color="#838383">B &amp; O Railroad</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Atlantic Avenue</font></td><td>1.589</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.546</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>0.515</td><td>0.515</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.515</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.690</td><td>5.556</td><td>0.000</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td><td>11.111</td><td>13.801</td><td>15.034</td><td>13.801</td><td>11.111</td><td>3.092</td><td>5.556</td><td>2.690</td><td>0.515</td><td>10.361</td><td align="center"><font color="#F7F700">Atlantic Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Ventnor Avenue</font></td><td>1.602</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.714</td><td>0.000</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td><td>8.270</td><td>11.111</td><td>12.705</td><td>16.667</td><td>13.826</td><td>4.167</td><td>8.270</td><td>5.556</td><td>3.409</td><td>7.538</td><td align="center"><font color="#F7F700">Ventnor Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#2BFFB3">Water Works</font></td><td>4.306</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.589</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>0.863</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#2BFFB3">Water Works</font></td><td>5.556</td><td>8.250</td><td>10.477</td><td>13.806</td><td>16.667</td><td>5.177</td><td>11.111</td><td>8.250</td><td>6.418</td><td>4.804</td><td align="center"><font color="#2BFFB3">Water Works</font></td></tr>
+<tr align="center"> <td align="left"><font color="#F7F700">Marvin Gardens</font></td><td>7.179</td><td>2.711</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.125</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>1.042</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>1.042</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td><td>2.711</td><td>5.556</td><td>8.145</td><td>11.111</td><td>13.822</td><td>6.250</td><td>13.822</td><td>11.111</td><td>9.308</td><td>2.024</td><td align="center"><font color="#F7F700">Marvin Gardens</font></td></tr>
+<tr align="center"> <td align="left"><font color="#834B00">Go To Jail</font></td><td>9.776</td><td>5.556</td><td>2.431</td><td>0.000</td><td>0.000</td><td>2.604</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.868</td><td>0.868</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.868</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#834B00">Go To Jail</font></td><td>0.000</td><td>2.778</td><td>5.621</td><td>8.333</td><td>11.111</td><td>5.208</td><td>16.667</td><td>13.889</td><td>11.979</td><td>1.443</td><td align="center"><font color="#834B00">Go To Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+<tr align="center"> <td align="left"><font color="#169919">Pacific Avenue</font></td><td>12.366</td><td>8.266</td><td>4.861</td><td>2.710</td><td>0.000</td><td>2.083</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pacific Avenue</font></td><td>0.000</td><td>0.000</td><td>2.979</td><td>5.556</td><td>8.266</td><td>4.167</td><td>13.821</td><td>16.667</td><td>14.516</td><td>1.660</td><td align="center"><font color="#169919">Pacific Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#169919">North Carolina Avenue</font></td><td>14.897</td><td>11.111</td><td>7.241</td><td>5.556</td><td>2.719</td><td>1.552</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.517</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.517</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">North Carolina Avenue</font></td><td>0.000</td><td>0.000</td><td>0.453</td><td>2.719</td><td>5.556</td><td>3.103</td><td>11.111</td><td>13.830</td><td>17.184</td><td>1.417</td><td align="center"><font color="#169919">North Carolina Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FFDB0F">Community Chest</font></td><td>17.730</td><td>13.818</td><td>9.722</td><td>8.262</td><td>5.556</td><td>3.748</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FFDB0F">Community Chest</font></td><td>0.000</td><td>0.000</td><td>0.304</td><td>0.000</td><td>2.707</td><td>2.083</td><td>8.262</td><td>11.111</td><td>14.165</td><td>1.490</td><td align="center"><font color="#FFDB0F">Community Chest</font></td></tr>
+<tr align="center"> <td align="left"><font color="#169919">Pennsylvania Avenue</font></td><td>14.884</td><td>16.667</td><td>12.108</td><td>11.111</td><td>8.282</td><td>6.067</td><td>2.727</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.170</td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.170</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td><td>0.000</td><td>0.000</td><td>0.149</td><td>0.000</td><td>0.000</td><td>1.023</td><td>5.556</td><td>8.282</td><td>11.282</td><td>1.352</td><td align="center"><font color="#169919">Pennsylvania Avenue</font></td></tr>
+<tr align="center"> <td align="left"><font color="#838383">Short Line</font></td><td>12.322</td><td>13.814</td><td>14.583</td><td>13.814</td><td>11.280</td><td>8.427</td><td>5.556</td><td>1.013</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.169</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.338</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.169</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#838383">Short Line</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.703</td><td>5.556</td><td>8.427</td><td>1.661</td><td align="center"><font color="#838383">Short Line</font></td></tr>
+<tr align="center"> <td align="left"><font color="#FA6C00">Chance</font></td><td>9.488</td><td>11.111</td><td>12.103</td><td>16.667</td><td>14.179</td><td>11.458</td><td>8.276</td><td>2.083</td><td>2.721</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.347</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#FA6C00">Chance</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>2.721</td><td>5.903</td><td>1.554</td><td align="center"><font color="#FA6C00">Chance</font></td></tr>
+<tr align="center"> <td align="left"><font color="#0000EE">Park Place</font></td><td>6.766</td><td>8.250</td><td>9.722</td><td>13.806</td><td>17.182</td><td>14.321</td><td>11.111</td><td>3.094</td><td>5.556</td><td>2.694</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.516</td><td>0.516</td><td>0.000</td><td>0.000</td><td>1.031</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.516</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Park Place</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>3.210</td><td>1.710</td><td align="center"><font color="#0000EE">Park Place</font></td></tr>
+<tr align="center"> <td align="left"><font color="#000000">Luxury Tax</font></td><td>3.939</td><td>5.556</td><td>7.247</td><td>11.111</td><td>14.533</td><td>17.361</td><td>13.838</td><td>4.167</td><td>8.283</td><td>5.556</td><td>2.727</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.694</td><td>0.694</td><td>0.000</td><td>0.000</td><td>1.389</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#000000">Luxury Tax</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.694</td><td>1.515</td><td align="center"><font color="#000000">Luxury Tax</font></td></tr>
+<tr align="center"> <td align="left"><font color="#0000EE">Boardwalk</font></td><td>1.210</td><td>2.698</td><td>4.861</td><td>8.254</td><td>11.974</td><td>14.672</td><td>16.667</td><td>5.178</td><td>11.111</td><td>8.254</td><td>5.556</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>3.561</td><td>0.863</td><td>0.000</td><td>0.000</td><td>1.726</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#0000EE">Boardwalk</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.863</td><td>1.689</td><td align="center"><font color="#0000EE">Boardwalk</font></td></tr>
+<tr align="center"> <td align="left"><font color="#DD7800">In Jail</font></td><td>0.460</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.174</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td align="center"><font color="#DD7800">In Jail</font></td><td>0.174</td><td>2.778</td><td>1.526</td><td>4.304</td><td>3.053</td><td>5.830</td><td>4.006</td><td>5.830</td><td>3.226</td><td>4.304</td><td align="center"><font color="#DD7800">In Jail</font></td><td>1.526</td><td>1.042</td><td>0.000</td><td>0.174</td><td>0.347</td><td>0.000</td><td>0.000</td><td>0.174</td><td>0.000</td><td>0.000</td><td align="center"><font color="#DD7800">In Jail</font></td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.000</td><td>0.174</td><td>60.899</td><td align="center"><font color="#DD7800">In Jail</font></td></tr>
+<tr><th> </th><th><font color="#834B00">Go</font></th><th><font color="#401060">Mediterranean Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#401060">Baltic Avenue</font></th><th><font color="#000000">Income Tax</font></th><th><font color="#838383">Reading Railroad</font></th><th><font color="#2CD2D2">Oriental Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#2CD2D2">Vermont Avenue</font></th><th><font color="#2CD2D2">Connecticut Avenue</font></th><th><font color="#834B00">Visiting Jail</font></th><th> </th><th><font color="#B40094">St. Charles Place</font></th><th><font color="#2BFFB3">Electric Company</font></th><th><font color="#B40094">States Avenue</font></th><th><font color="#B40094">Virginia Avenue</font></th><th><font color="#838383">Pennsylvania Railroad</font></th><th><font color="#FF9400">St. James Place</font></th><th><font color="#FFDBOF">Community Chest</font></th><th><font color="#FF9400">Tennessee Avenue</font></th><th><font color="#FF9400">New York Avenue</font></th><th><font color="#834B00">Free Parking</font></th><th> </th><th><font color="#FF0000">Kentucky Avenue</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#FF0000">Indiana Avenue</font></th><th><font color="#FF0000">Illinois Avenue</font></th><th><font color="#838383">B &amp; O Railroad</font></th><th><font color="#F7F700">Atlantic Avenue</font></th><th><font color="#F7F700">Ventnor Avenue</font></th><th><font color="#2BFFB3">Water Works</font></th><th><font color="#F7F700">Marvin Gardens</font></th><th><font color="#834B00">Go To Jail</font></th><th> </th><th><font color="#169919">Pacific Avenue</font></th><th><font color="#169919">North Carolina Avenue</font></th><th><font color="#FFDB0F">Community Chest</font></th><th><font color="#169919">Pennsylvania Avenue</font></th><th><font color="#838383">Short Line</font></th><th><font color="#FA6C00">Chance</font></th><th><font color="#0000EE">Park Place</font></th><th><font color="#000000">Luxury Tax</font></th><th><font color="#0000EE">Boardwalk</font></th><th><font color="#DD7800">In Jail</font></th><th> </th></tr>
+</tbody></table>
+
+<p>
+I'm interested in comments on this page, particularly
+concerning any mistakes you may have noticed and suggestions
+on readability.
+</p>
+
+<!-- <P> -->
+<!-- I would like to thank my wife Kristin for her help -->
+<!-- proofreading this page and for her suggestions. -->
+<!-- </P> -->
+
+<img src="./Probabilities in the Game of Monopoly®_files/zdtv.gif" width="150" height="92">
+
+<center>
+Back to my <a href="http://www.tkcs-collins.com/truman/index.shtml">homepage</a>.
+</center>
+
+<p>
+2,047,615 visits (71 today, 846 this week, 1,621 this
+              month, 38,380 this year) since May 4, 1997.
+</p>
+
+<hr>
+<center>
+<address>
+<i>
+Copyright 1997 by Truman Collins<br>
+For comments, email: <a href="mailto:truman@tkcs-collins.com?subject=Monopoly%20page">
+Truman Collins (truman@tkcs-collins.com)</a><br>
+Most recent update: January 5, 2005<br>
+http://www.tkcs-collins.com/truman/monopoly/monopoly.shtml
+</i>
+</address>
+</center>
+
+<!-- WiredMinds eMetrics tracking with Enterprise Edition V5.4 START -->
+<script type="text/javascript" src="./Probabilities in the Game of Monopoly®_files/count.js"></script>
+<script type="text/javascript"><!--
+wm_custnum='0e301831bec39b07';
+wm_page_name='monopoly.shtml';
+wm_group_name='/services/webpages/t/k/tkcs-collins.com/public/truman/monopoly';
+wm_campaign_key='campaign_id';
+wm_track_alt='';
+wiredminds.count();
+// -->
+</script>
+<!-- WiredMinds eMetrics tracking with Enterprise Edition V5.4 END -->
+
+
+</body></html>
