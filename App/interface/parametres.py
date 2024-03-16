@@ -3,13 +3,42 @@
 
 import tkinter as tk
 
+
+
+class Parametres_2:
+    """
+    cette classe prend les paramètre à défaut pour le Monopoly printemps des sciences
+
+    """
+
+    def __init__(self, dataMonopoly):
+
+        self._dataMonopoly = dataMonopoly
+
+    def getNbrDeDes(self):
+
+        return  2
+
+    def getNbrTourMaxPrison(self):
+
+        return 2
+
+    def getProbPayerSortirPrison(self):
+
+        return 0.5
+
+    def getNbrDeDoublePrison(self):
+
+        return 0
+
+
 class Parametres(tk.Toplevel):
 
     # Paramètres par défaut
     DEFAULT_DES = 2
-    DEFAULT_TOUR_PRISON = 2
+    DEFAULT_TOUR_PRISON = 3
     DEFAULT_PROB_SORTIR_PRISON = 0.5
-    DEFAULT_NBR_DOUBLE_PRISON = 0
+    DEFAULT_NBR_DOUBLE_PRISON = 3
 
 
     def __init__(self, dataMonopoly):

@@ -11,7 +11,7 @@ import monopoly.DataMonopoly as dataMonopoly
 # Interface
 from interface.scrollTk import scrollTk
 from interface.choixMonopoly import ChoixMonopoly
-from interface.parametres import Parametres
+from interface.parametres import Parametres_2
 from interface.statistiques import Statistiques
 from interface.viewMarkov import viewMarkov
 from interface.configTour import ConfigTour
@@ -161,8 +161,9 @@ class FenetrePrincipal(scrollTk):
         Permet de choisir les paramètres qui seront utilisé pour modéliser le Monopoly
     """
     def __choixParametres(self, event = None):
-        self._choixParametres = Parametres(self._selectedDataMonopoly)
-        self.wait_window(self._choixParametres)
+        # self._choixParametres = Parametres(self._selectedDataMonopoly)
+        self._choixParametres = Parametres_2(self._selectedDataMonopoly)
+        # self.wait_window(self._choixParametres)
         if(self._selectedDataMonopoly != None):
             self.__refrechMonopolyData()
 
