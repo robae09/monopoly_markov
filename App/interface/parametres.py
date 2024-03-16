@@ -7,9 +7,9 @@ class Parametres(tk.Toplevel):
 
     # Paramètres par défaut
     DEFAULT_DES = 2
-    DEFAULT_TOUR_PRISON = 3
+    DEFAULT_TOUR_PRISON = 2
     DEFAULT_PROB_SORTIR_PRISON = 0.5
-    DEFAULT_NBR_DOUBLE_PRISON = 3
+    DEFAULT_NBR_DOUBLE_PRISON = 0
 
 
     def __init__(self, dataMonopoly):

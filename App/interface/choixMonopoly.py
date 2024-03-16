@@ -27,7 +27,6 @@ class ChoixMonopoly(tk.Toplevel):
     def __loadAllMonopoly(self):
         self._listMonopolyDisponible = dataMonopoly.getAllDataMonopoly()
 
-
     """
         Initialisation de la fenêtre permettant de choisir le monopoly
     """
